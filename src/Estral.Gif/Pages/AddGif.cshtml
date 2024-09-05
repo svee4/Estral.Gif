@@ -1,0 +1,11 @@
+@page "/AddGif"
+@model Estral.Gif.Pages.AddGifModel
+
+<article id="page">
+    <helper:form method="POST">
+        @Html.AntiForgeryToken()
+        <label for="link">Link to gif</label>
+        <input type="text" placeholder="Link" name="link" id="link" required />
+        <button type="submit">Submit</button>
+    </helper:form>
+</article>

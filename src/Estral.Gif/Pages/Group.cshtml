@@ -1,0 +1,81 @@
+@page "/Group/{GroupId:int}"
+@model Estral.Gif.Pages.GroupModel
+
+<article id="page">
+
+    <div>
+        <h2>@Model.Group?.Name</h2>
+        <button onclick="changeName()">Change name</button>
+    </div>
+
+    @if (Model.ErrorMessage is not null)
+    {
+        <h3>@Model.ErrorMessage</h3>
+    }
+
+    <ul>
+        @foreach (var gif in Model.Group?.Gifs ?? [])
+        {
+            <li>
+                <div>
+                    <div>
+                        <button onclick="removeFromGroup(@gif.Id)">Remove from group</button>
+                        <button onclick="unsave(@gif.Id)">Unsave</button>
+                    </div>
+                    <div>
+                        <img src="@gif.Url" />
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+
+    <helper:form style="display: none" method="POST" id="remove-gif-form" asp-page-handler="RemoveGif">
+        @Html.AntiForgeryToken()
+        <input type="number" name="gifId" />
+    </helper:form>
+
+    <helper:form style="display: none" method="POST" id="unsave-form" asp-page-handler="Unsave">
+        @Html.AntiForgeryToken()
+        <input type="number" name="gifId" />
+    </helper:form>
+
+    <helper:form style="display: none" method="POST" id="change-name-form" asp-page-handler="ChangeName">
+        @Html.AntiForgeryToken()
+        <input type="text" name="newName" />
+    </helper:form>
+
+    <script>
+        function removeFromGroup(id) {
+            if (!confirm("Are you sure you want to remove this gif from this group")) return;
+
+            const form = document.getElementById("remove-gif-form");
+            const input = form["gifId"];
+            input.value = id;
+            form.submit();
+        }
+
+        function unsave(id) {
+            if (!confirm("Are you sure you want to unsave this gif")) return;
+
+            const form = document.getElementById("unsave-form");
+            const input = form["gifId"];
+            input.value = id;
+            form.submit();
+        }
+
+        function changeName() {
+            const newName = prompt("New name: ");
+            if (!newName) {
+                alert("Invalid new name");
+                return;
+            }
+
+            const form = document.getElementById("change-name-form");
+            const input = form["newName"];
+            input.value = newName;
+            form.submit();
+        }
+    </script>
+
+</article>

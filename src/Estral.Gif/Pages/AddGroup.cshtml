@@ -1,0 +1,13 @@
+@page "/AddGroup"
+@model Estral.Gif.Pages.AddGroupModel
+@{
+}
+
+<article id="page">
+    <helper:form method="POST">
+        @Html.AntiForgeryToken()
+        <label for="name">Group name</label>
+        <input type="text" placeholder="Name" name="name" id="name" required />
+        <button type="submit">Submit</button>
+    </helper:form>
+</article>

@@ -1,0 +1,21 @@
+@page "/Gifs"
+@model Estral.Gif.Pages.GifsModel
+
+<article id="page">
+    <a href="/AddGif">Add new Gif</a>
+    <ul>
+        @foreach (var gif in Model.Gifs)
+        {
+            <li>
+                <a href="/Gif/@gif.Id">
+                    <div>
+                        <p>Group: @(gif.Group ?? "none")</p>
+                    </div>
+                    <div>
+                        <img src="@gif.Url" />
+                    </div>
+                </a>
+            </li>
+        }
+    </ul>
+</article>

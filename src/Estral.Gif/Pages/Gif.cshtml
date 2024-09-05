@@ -1,0 +1,51 @@
+@page "/Gif/{GifId:int}"
+@model Estral.Gif.Pages.GifModel
+
+<article id="page">
+
+    @if (Model.Gif is null)
+    {
+        <h3>Gif not found</h3>
+    }
+
+    <p>Group: @(Model.Gif?.Group ?? "None")</p>
+
+    <div>
+        <button type="button" onclick="document.getElementById('groups-dialog').showModal();">Move to group</button>
+        <button type="submit" form="unsave-form">Unsave</button>
+    </div>
+
+    <div>
+        <img src="@Model.Gif?.Url" />
+    </div>
+
+    <helper:form 
+        style="display: none" 
+        method="POST" 
+        onsubmit="return confirm('Are you sure you want to unsave this gif?')"
+        id="unsave-form" 
+        asp-page-handler="Unsave"
+    >
+        @Html.AntiForgeryToken()
+        <input type="number" name="gifId" value="@Model.Gif?.Id" />
+    </helper:form>
+
+    <dialog id="groups-dialog">
+        <helper:form method="POST" asp-page-handler="MoveToGroup">
+            @Html.AntiForgeryToken()
+            <h3>Select group</h3>
+            <button type="button" onclick="document.getElementById('groups-dialog').close()">Cancel</button>
+            <ul>
+                @foreach (var group in Model.Groups)
+                {
+                    <li>
+                        <div>
+                            <p>@group.Name</p>
+                            <button type="submit" name="groupId" value="@group.Id">Select</button>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </helper:form>
+    </dialog>
+</article>

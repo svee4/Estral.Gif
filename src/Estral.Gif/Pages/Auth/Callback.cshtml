@@ -1,0 +1,27 @@
+@page "/Auth/Callback"
+@model Estral.Gif.Pages.Auth.CallbackModel
+@{
+    ViewData["Title"] = Model.ErrorMessage is not null ? "Login error" : "Logging in...";
+}
+
+<article id="page">
+    <p style="margin-left: auto; margin-right: auto;">
+        @(Model.ErrorMessage ?? "Logging in...")
+    </p>
+
+    @* have to detour via the client so we get the state cookie *@
+    <helper:form method="POST" id="form">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="code" value="@Model.OAuthParams.Code" />
+        <input type="hidden" name="state" value="@Model.OAuthParams.State" />
+    </helper:form>
+</article>
+
+
+@if (Model.ErrorMessage is null && Model.PostFast)
+{
+    <script type="module">
+        window.history.replaceState(null, '', window.location.pathname); // clear query string  
+        setTimeout(() => document.getElementById("form").submit(), 1);
+    </script>
+}
